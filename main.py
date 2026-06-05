@@ -13,6 +13,7 @@ from src.embeddings import (
     OPENAI_EMBEDDING_MODEL,
     LocalEmbedder,
     OpenAIEmbedder,
+    HashingTFIDFEmbedder,
     _mock_embed,
 )
 from src.models import Document
@@ -93,6 +94,11 @@ def run_manual_demo(question: str | None = None, sample_files: list[str] | None 
     elif provider == "openai":
         try:
             embedder = OpenAIEmbedder(model_name=os.getenv("OPENAI_EMBEDDING_MODEL", OPENAI_EMBEDDING_MODEL))
+        except Exception:
+            embedder = _mock_embed
+    elif provider in ("tfidf", "hashing_tfidf", "hashing-tfidf"):
+        try:
+            embedder = HashingTFIDFEmbedder()
         except Exception:
             embedder = _mock_embed
     else:
